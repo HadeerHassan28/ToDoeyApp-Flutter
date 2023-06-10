@@ -3,12 +3,14 @@ import './task_tile.dart';
 import '../modules/task.dart';
 
 class TasksList extends StatefulWidget {
-  const TasksList({
-    Key? key,
-  }) : super(key: key);
+  const TasksList({Key? key, required List<Task> tasks}) : super(key: key);
 
   @override
-  State<TasksList> createState() => _TasksListState();
+  _TasksListState createState() => _TasksListState();
+
+  static _TasksListState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_TasksListState>();
+  }
 }
 
 class _TasksListState extends State<TasksList> {
@@ -18,6 +20,18 @@ class _TasksListState extends State<TasksList> {
     Task(name: 'Task 3'),
   ];
 
+  void addTask(Task newTask) {
+    setState(() {
+      tasks.add(newTask);
+    });
+  }
+
+  void toggleTask(Task task) {
+    setState(() {
+      task.toggleDone();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -26,11 +40,7 @@ class _TasksListState extends State<TasksList> {
         Task task = tasks[index];
         return TaskTile(
           isChecked: task.isDone,
-          checkboxCallback: (newValue) {
-            setState(() {
-              task.toggleDone();
-            });
-          },
+          checkboxCallback: (_) => toggleTask(task),
           task: task,
         );
       },

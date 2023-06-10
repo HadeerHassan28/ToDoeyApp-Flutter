@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
+import '../modules/task.dart';
 import '../widgets/task_tile.dart';
 import '../widgets/tasks_list.dart';
 import '../screen/addTaskScreen.dart';
 
-class TaskScreen extends StatelessWidget {
+class TaskScreen extends StatefulWidget {
   const TaskScreen({Key? key}) : super(key: key);
+
+  @override
+  _TaskScreenState createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends State<TaskScreen> {
+  List<Task> tasks = [
+    Task(name: 'Task 1'),
+    Task(name: 'Task 2'),
+    Task(name: 'Task 3'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +26,13 @@ class TaskScreen extends StatelessWidget {
         backgroundColor: Colors.blue.shade200,
         onPressed: () {
           showModalBottomSheet(
-              context: context, builder: (context) => AddTaskScreen());
+            context: context,
+            builder: (context) => AddTaskScreen(onAddTask: (task) {
+              setState(() {
+                tasks.add(task);
+              });
+            }),
+          );
         },
         child: Icon(Icons.add),
       ),
@@ -47,7 +65,7 @@ class TaskScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "12 Tasks",
+                    "Tasks",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -66,7 +84,7 @@ class TaskScreen extends StatelessWidget {
                     topRight: Radius.circular(20),
                   ),
                 ),
-                child: TasksList(),
+                child: TasksList(tasks: tasks),
               ),
             ),
           ],

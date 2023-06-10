@@ -1,7 +1,33 @@
 import 'package:flutter/material.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({Key? key});
+import '../modules/task.dart';
+import 'TaskScreen.dart';
+import '../widgets/tasks_list.dart';
+import '../widgets/task_tile.dart';
+
+class AddTaskScreen extends StatefulWidget {
+  final Function(Task) onAddTask;
+
+  const AddTaskScreen({Key? key, required this.onAddTask}) : super(key: key);
+
+  @override
+  _AddTaskScreenState createState() => _AddTaskScreenState();
+}
+
+class _AddTaskScreenState extends State<AddTaskScreen> {
+  String taskName = '';
+
+  void addTaskToList() {
+    if (taskName.isNotEmpty) {
+      setState(() {
+        final task = Task(name: taskName);
+        widget.onAddTask(task); // Pass the task as a List
+        taskName = '';
+      });
+
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +53,14 @@ class AddTaskScreen extends StatelessWidget {
             TextField(
               autofocus: true,
               textAlign: TextAlign.center,
+              onChanged: (value) {
+                setState(() {
+                  taskName = value;
+                });
+              },
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: addTaskToList,
               child: Text(
                 "Add",
                 style: TextStyle(
